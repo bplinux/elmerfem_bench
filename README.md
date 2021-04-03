@@ -1,1 +1,3 @@
-# emwavesolver_01
+# elmerfem_bench
+
+Some elmerfem practical examples of emwave simulation
