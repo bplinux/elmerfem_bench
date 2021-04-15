@@ -34,3 +34,7 @@ Curve Loop(2) = {3, 4, 5, -9};
 Plane Surface(1) = {1, 2};
 
 Mesh 2;
+//+
+Recursive Delete {
+  Curve{9}; 
+}
