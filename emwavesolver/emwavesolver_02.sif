@@ -2,6 +2,7 @@
 ! A 2-D case for the electromagnetic wave solver.
 ! Utilizes constant matrices for speedier assembly.
 !
+! emwavesolver_02 like _01 but with scalarsaving (test)
 
 Check Keywords "Warn"
 
@@ -12,6 +13,7 @@ $ eps0=8.854187817e-12
 $ mu0=4e-7*pi
 $ lambda=c/f
 $ nwave=0.6/lambda
+$ timeinterval = 100
 
 Header
   Mesh DB "." "copperplane"
@@ -23,9 +25,9 @@ Simulation
   Coordinate System = "Cartesian"
   Simulation Type = Transient
   Timestepping Method = Bossak
-  Timestep Sizes = $1*pi/(w*nwave)
+  Timestep Sizes = $nwave/f/timeinterval
 
-  Timestep Intervals = 100
+  Timestep Intervals = $timeinterval
   Steady State Max Iterations = 1
 
   Output Intervals(1) = 1
@@ -48,7 +50,7 @@ Material 1
 End
 
 Equation 1
-  Active Solvers(3) = 1 2 3
+  Active Solvers(4) = 1 2 3 4
 End
 
 
@@ -85,9 +87,9 @@ Solver 2
 
 !  Discontinuous Galerkin = True
 !  Average Within Materials = True
-  Calculate Elemental Fields = False
+  Calculate Elemental Fields = True
   Calculate Nodal Fields = True
-!  Calculate Electric field derivatives = Logical True
+  Calculate Electric field derivatives = Logical True
 
   Steady State Convergence Tolerance = 1
   Linear System Solver = "Iterative"
@@ -104,14 +106,30 @@ Solver 2
 !  Exec Solver = never
 End
 
-Solver 3
+Solver 4
   Equation = "result output"
   Procedure = "ResultOutputSolve" "ResultOutputSolver"
-  Output File Name = copperplane
+  Output File Name = emwavesolver_02
   Vtu Format = Logical True
   Save Geometry Ids = Logical True
 
   Exec Solver = before saving
+!  Exec Solver = never
+End 
+
+Solver 3
+  Equation = "Isosurface"
+  Procedure = "Isosurface" "IsosurfaceSolver"
+
+  Isosurface Variable = E
+  Isosurface Values(3) = -30.0 0.0 30.0  
+
+  Exec Solver = before saving
+
+  Variable 1 = elfield
+
+  Output Directory = isoline
+
 !  Exec Solver = never
 End 
 
