@@ -11,7 +11,7 @@ $ c=300000000
 $ eps0=8.854187817e-12
 $ mu0=4e-7*pi
 $ lambda=c/f
-$ nwave=0.6/lambda
+$ nwave=0.6/lambda+4
 $ timeinterval = 100
 
 Header
@@ -69,7 +69,7 @@ Solver 1
   Linear System Iterative Method = String "bicgstabl"
   BiCGstabl polynomial degree = Integer 4  
   Linear System Preconditioning = String "none"
-  Linear System ILUT Tolerance = Real 1e-3
+  Linear System ILUT Tolerance = Real 1e-4
   Linear System Max Iterations = 1000
   Linear System Convergence Tolerance = 1.0e-8
   Linear System Abort Not Converged = True
@@ -85,7 +85,7 @@ Solver 2
   Linear System Symmetric = False
 
 !  Discontinuous Galerkin = True
-!  Average Within Materials = True
+  Average Within Materials = True
   Calculate Elemental Fields = False
   Calculate Nodal Fields = True
 !  Calculate Electric field derivatives = Logical True
@@ -126,6 +126,7 @@ Boundary Condition 1
   Name = "Inlet"
   Target Boundaries(1) = 8
 
+  Electric Damping Coefficient = Real $sqrt(mu0*eps0)
   E {e} 2 = Variable "time"
     Real MATC "100*sin(w*tx)"
   E {e} 1 = Real 0
